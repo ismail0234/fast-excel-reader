@@ -179,16 +179,16 @@ class FastExcelReader
 		$this->TmpPathId           = sprintf('%s_%s', uniqid(), rand(1000000, 9000000));
 		$this->Zip                 = new \ZipArchive();
 
-        if ($this->Zip->open($this->FilePath) === true)
-        {
-	    	$this->Zip->extractTo($this->GetRandomTempPath(), $this->workbookSharedStringName);
-	    	$this->Zip->extractTo($this->GetRandomTempPath(), $this->workbookSheet1Name);
+		if ($this->Zip->open($this->FilePath) === true)
+		{
+			$this->Zip->extractTo($this->GetRandomTempPath(), $this->workbookSharedStringName);
+			$this->Zip->extractTo($this->GetRandomTempPath(), $this->workbookSheet1Name);
 
-        	$this->loadSharedStrings();
-        	return true;
-        }
+			$this->loadSharedStrings();
+			return true;
+		}
 
-        return false;
+		return false;
 	}
 
 	/**
@@ -205,21 +205,21 @@ class FastExcelReader
 
 		while (($data = fread($stream, $this->seekLength))) 
 		{
-		    xml_parse($parser, $data);
+			xml_parse($parser, $data);
 
-		    foreach ($this->getRowDetails($data) as $row)
-		    {
-		    	yield $row;
-		    }
+			foreach ($this->getRowDetails($data) as $row)
+			{
+				yield $row;
+			}
 
-		    if (strlen($data) < $this->seekLength)
-		    {
-		    	break;
-		    }
+			if (strlen($data) < $this->seekLength)
+			{
+				break;
+			}
 
-		    $this->currentSeekPosition += $this->getSeekPosition($data) + 6;
+			$this->currentSeekPosition += $this->getSeekPosition($data) + 6;
 
-		    fseek($stream, $this->currentSeekPosition);
+			fseek($stream, $this->currentSeekPosition);
 		}
 
 		xml_parser_free($parser);
@@ -235,18 +235,18 @@ class FastExcelReader
 	 * @author Ismail <ismaiil_0234@hotmail.com>
 	 *
 	 */
-    public function __destruct()
-    {
-        if ($this->Zip) 
-        {
-            $this->Zip->close();
-        }
+	public function __destruct()
+	{
+		if ($this->Zip) 
+		{
+			$this->Zip->close();
+		}
 
-        if (!empty($this->GetRandomTempPath()) && file_exists($this->GetRandomTempPath())) 
-        {
-        	$this->removeDirectory($this->GetRandomTempPath());
-        }
-    }
+		if (!empty($this->GetRandomTempPath()) && file_exists($this->GetRandomTempPath())) 
+		{
+			$this->removeDirectory($this->GetRandomTempPath());
+		}
+	}
 
 	/**
 	 *
@@ -322,17 +322,17 @@ class FastExcelReader
 	 */
 	private function getSeekPosition($data)
 	{
-	    $seek = 0;
+		$seek = 0;
 
-	    do 
-	    {
-	    	$seek += 300;
+		do 
+		{
+			$seek += 300;
 
-	    	$position = strpos($data, '</row>', $this->seekLength - $seek);
-	    } 
-	    while ($position === false);
+			$position = strpos($data, '</row>', $this->seekLength - $seek);
+		} 
+		while ($position === false);
 
-	    return $position;
+		return $position;
 	}
 
 	/**
@@ -344,28 +344,28 @@ class FastExcelReader
 	 */
 	private function loadSharedStrings()
 	{
-        $xml = new \XMLReader();
-        $xml->open($this->GetRandomTempPath($this->workbookSharedStringName));
+		$xml = new \XMLReader();
+		$xml->open($this->GetRandomTempPath($this->workbookSharedStringName));
 
-        $currentIndex = -1;
+		$currentIndex = -1;
 
-        while ($xml->read()) 
-        {
-            if ($xml->nodeType === \XMLReader::ELEMENT) 
-            {
-                switch ($xml->name) 
-                {
-                    case 'si':
-                        $currentIndex++;
-                        break;
-                    case 't':
-                        $this->SharedStrings[$currentIndex] = $xml->readString();
-                        break;
-                }
-            }
-        }
+		while ($xml->read()) 
+		{
+			if ($xml->nodeType === \XMLReader::ELEMENT) 
+			{
+				switch ($xml->name) 
+				{
+					case 'si':
+						$currentIndex++;
+						break;
+					case 't':
+						$this->SharedStrings[$currentIndex] = $xml->readString();
+						break;
+				}
+			}
+		}
 
-        $xml->close();
+		$xml->close();
 	}
 
 	/**
@@ -377,8 +377,8 @@ class FastExcelReader
 	 */
 	private function removeDirectory($directory) 
 	{ 
-	   	if (is_dir($directory)) 
-	   	{ 
+		if (is_dir($directory)) 
+		{ 
 			$files = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($directory, \RecursiveDirectoryIterator::SKIP_DOTS), \RecursiveIteratorIterator::CHILD_FIRST);
 
 			foreach ($files as $finfo) 
@@ -394,6 +394,6 @@ class FastExcelReader
 			}
 
 			rmdir($directory);
-	   	} 
+		} 
 	}
 }

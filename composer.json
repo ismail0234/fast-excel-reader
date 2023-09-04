@@ -16,7 +16,7 @@
     "require": {},
     "autoload": {
         "psr-4": {
-            "FastExcel": "FastExcel"
+            "FastExcel\\": "FastExcel"
         }
     },
     "minimum-stability": "stable"    

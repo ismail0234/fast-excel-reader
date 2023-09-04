@@ -1,0 +1,23 @@
+{
+    "name": "ismail0234/FastExcelReader",
+    "type": "library",
+    "description": "A very fast excel reader written in php.",
+    "keywords": ["excel reader","excel", "bot benson", "php excel", "php excel reader"],
+    "homepage": "https://github.com/ismail0234/FastExcelReader",
+    "license": "GPL-3.0",
+    "authors": [
+        {
+            "name": "Ismail",
+            "email": "ismaiil_0234@hotmail.com",
+            "homepage": "https://github.com/ismail0234/pdodatabase",
+            "role": "Owner and Developer"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "FastExcel": "FastExcel"
+        }
+    },
+    "minimum-stability": "stable"    
+}

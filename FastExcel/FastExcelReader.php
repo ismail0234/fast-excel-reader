@@ -87,6 +87,15 @@ class FastExcelReader
 
 	/**
 	 *
+	 * Excel kolon ad ve indexlerini barındırır.
+	 *
+	 * @author Ismail <ismaiil_0234@hotmail.com>
+	 *
+	 */
+	private $excelColumnIndexes = array();
+
+	/**
+	 *
 	 * Sınıf ayarlamalarını yapar.
 	 *
 	 * @author Ismail <ismaiil_0234@hotmail.com>
@@ -95,6 +104,25 @@ class FastExcelReader
 	public function __construct()
 	{
 		$this->setSeekLength(128);
+		$this->genereateColumnIndexes();
+	}
+
+	/**
+	 *
+	 * Kolon indekslerini oluşturur.
+	 *
+	 * @author Ismail <ismaiil_0234@hotmail.com>
+	 *
+	 */
+	public function genereateColumnIndexes()
+	{
+		$letter = 'A';
+		$index  = 0;
+
+		while ($letter !== 'ZZ') 
+		{
+		    $this->excelColumnIndexes[$letter++] = $index++;
+		}
 	}
 
 	/**
@@ -284,11 +312,11 @@ class FastExcelReader
 	{
 		$cells = [];
 
-		if (preg_match_all('@<c r="(.*?)"(.*?)><v>(.*?)</v></c>@', $cellData, $cellMatch))
+		if (preg_match_all('@<c r="([A-Z\/]+)(.*?)"(.*?)><v>(.*?)</v></c>@', $cellData, $cellMatch))
 		{
-			foreach ($cellMatch[3] as $cellIndex => $cell)
+			foreach ($cellMatch[4] as $cellIndex => $cell)
 			{
-				$cells[str_replace($rowId, '', $cellMatch[1][$cellIndex])] = $this->getCellValue($cell, $cellMatch[2][$cellIndex]);
+				$cells[$this->excelColumnIndexes[$cellMatch[1][$cellIndex]]] = $this->getCellValue($cell, $cellMatch[3][$cellIndex]);
 			}
 		}
 

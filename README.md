@@ -43,6 +43,36 @@ if ($excel->Open())
 		print_r($row);
 		echo '</pre>';
 		exit;
+
+		// Output
+		/*
+			Array
+			(
+			    [RowId] => 10001
+			    [Cells] => Array
+			        (
+			            [0]  => Cell Value 0
+			            [1]  => Cell Value 1
+			            [2]  => Cell Value 2
+			            [3]  => Cell Value 3
+			            [5]  => Cell Value 5
+			            [6]  => Cell Value 6
+			            [7]  => Cell Value 7
+			            [8]  => Cell Value 8
+			            [9]  => Cell Value 9
+			            [10] => Cell Value 10
+			            [11] => Cell Value 11
+			            [12] => Cell Value 12
+			            [13] => Cell Value 13
+			            [14] => Cell Value 14
+			            [15] => Cell Value 15
+			            [16] => Cell Value 16
+			            [17] => Cell Value 17
+			            [18] => Cell Value 18
+			            [21] => Cell Value 21
+			        )
+			)
+		*/
 	}
 }
 ```

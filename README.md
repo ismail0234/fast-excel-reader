@@ -12,6 +12,10 @@ composer require ismail0234/fast-excel-reader
 
 ```
 
+## Benchmark
+
+Soon
+
 
 ## Install & Usage
 

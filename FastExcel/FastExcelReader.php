@@ -356,6 +356,11 @@ class FastExcelReader
 		{
 			$seek += 300;
 
+			if ($this->seekLength - $seek <= 0) 
+			{
+				return $this->seekLength;
+			}
+
 			$position = strpos($data, '</row>', $this->seekLength - $seek);
 		} 
 		while ($position === false);

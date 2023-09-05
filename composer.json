@@ -18,5 +18,6 @@
         "psr-4": {
             "FastExcel\\": "FastExcel"
         }
-    }
+    },
+    "minimum-stability": "stable"
 }

@@ -270,7 +270,7 @@ class FastExcelReader
 			$this->Zip->close();
 		}
 
-		if (!empty($this->GetRandomTempPath()) && file_exists($this->GetRandomTempPath())) 
+		if (!empty($this->TmpPathId) && file_exists($this->GetRandomTempPath())) 
 		{
 			$this->removeDirectory($this->GetRandomTempPath());
 		}

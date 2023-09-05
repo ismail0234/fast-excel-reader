@@ -14,7 +14,7 @@ composer require ismail0234/fast-excel-reader
 
 ## Benchmark
 
-| Information        | 10.000 Row + 20 Column | 100.000 Row + 20 Column |
+| Information        | 100.000 Row + 20 Column | 10.000 Row + 20 Column |
 |--------------------|------------------------|-------------------------|
 | PhpSpreadsheet     | 120.50 Seconds         | 11.52 Seconds           |
 | Box/Spout Excel    | 101.45 Seconds         | 12.56 Seconds           |

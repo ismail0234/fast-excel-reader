@@ -14,10 +14,10 @@ composer require ismail0234/fast-excel-reader
 
 ## Benchmark
 
-| Information             | File Size | PhpSpreadsheet | Box/Spout Excel | PHPExcel      | Akeneo Spreadsheet | FastExcelReader |
-|-------------------------|:---------:|----------------|-----------------|---------------|--------------------|-----------------|
-| 10.000 Row + 20 Column  | 1 MB      | 11.52 Seconds  | 12.56 Seconds   | 6.64 Seconds  | 2.06 Seconds       | 0.44 Seconds    |
-| 100.000 Row + 20 Column | 10 MB     | 120.50 Seconds | 101.45 Seconds  | 72.06 Seconds | 17.94 Seconds      | 3.97 Seconds    |
+| Information             | PhpSpreadsheet | Box/Spout Excel | PHPExcel      | Akeneo Spreadsheet | FastExcelReader |
+|-------------------------| ---------------|-----------------|---------------|--------------------|-----------------|
+| 10.000 Row + 20 Column  | 11.52 Seconds  | 12.56 Seconds   | 6.64 Seconds  | 2.06 Seconds       | 0.44 Seconds    |
+| 100.000 Row + 20 Column | 120.50 Seconds | 101.45 Seconds  | 72.06 Seconds | 17.94 Seconds      | 3.97 Seconds    |
 
 ## Install & Usage
 

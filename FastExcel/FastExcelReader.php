@@ -4,429 +4,517 @@ namespace FastExcel;
 
 class FastExcelReader
 {
-	/**
-	 *
-	 * workbookSharedStringName yolunu barındırır.
-	 *
-	 * @author Ismail <ismaiil_0234@hotmail.com>
-	 *
-	 */
-	private $workbookSharedStringName = 'xl/sharedStrings.xml';
+    /**
+     *
+     * workbookSharedStringName yolunu barındırır.
+     *
+     * @author Ismail <ismaiil_0234@hotmail.com>
+     *
+     */
+    private $workbookSharedStringName = 'xl/sharedStrings.xml';
 
-	/**
-	 *
-	 * workbookSheet1Name yolunu barındırır.
-	 *
-	 * @author Ismail <ismaiil_0234@hotmail.com>
-	 *
-	 */
-	private $workbookSheet1Name = 'xl/worksheets/sheet1.xml';
+    /**
+     *
+     * workbookSheet1Name yolunu barındırır.
+     *
+     * @author Ismail <ismaiil_0234@hotmail.com>
+     *
+     */
+    private $workbookSheet1Name = 'xl/worksheets/sheet1.xml';
 
-	/**
-	 *
-	 * Excel yolunu barındırır.
-	 *
-	 * @author Ismail <ismaiil_0234@hotmail.com>
-	 *
-	 */
-	private $FilePath = null;
+    /**
+     *
+     * workbookStyle yolunu barındırır.
+     *
+     * @author Ismail <ismaiil_0234@hotmail.com>
+     *
+     */
+    private $workbookStyle = 'xl/styles.xml';
 
-	/**
-	 *
-	 * TmpPath yolunu barındırır.
-	 *
-	 * @author Ismail <ismaiil_0234@hotmail.com>
-	 *
-	 */
-	private $TmpPath = null;
+    /**
+     *
+     * Excel yolunu barındırır.
+     *
+     * @author Ismail <ismaiil_0234@hotmail.com>
+     *
+     */
+    private $FilePath = null;
 
-	/**
-	 *
-	 * TmpPathId yolunu barındırır.
-	 *
-	 * @author Ismail <ismaiil_0234@hotmail.com>
-	 *
-	 */
-	private $TmpPathId = null;
+    /**
+     *
+     * TmpPath yolunu barındırır.
+     *
+     * @author Ismail <ismaiil_0234@hotmail.com>
+     *
+     */
+    private $TmpPath = null;
 
-	/**
-	 *
-	 * Zip Nesnesini barındırır.
-	 *
-	 * @author Ismail <ismaiil_0234@hotmail.com>
-	 *
-	 */
-	private $Zip = null;
+    /**
+     *
+     * TmpPathId yolunu barındırır.
+     *
+     * @author Ismail <ismaiil_0234@hotmail.com>
+     *
+     */
+    private $TmpPathId = null;
 
-	/**
-	 *
-	 * SharedStrings Nesnesini barındırır.
-	 *
-	 * @author Ismail <ismaiil_0234@hotmail.com>
-	 *
-	 */
-	private $SharedStrings = array();
+    /**
+     *
+     * Zip Nesnesini barındırır.
+     *
+     * @author Ismail <ismaiil_0234@hotmail.com>
+     *
+     */
+    private $Zip = null;
 
-	/**
-	 *
-	 * Aralık uzunluluğunu barındırır.
-	 *
-	 * @author Ismail <ismaiil_0234@hotmail.com>
-	 *
-	 */
-	private $seekLength = 1024;
+    /**
+     *
+     * SharedStrings Nesnesini barındırır.
+     *
+     * @author Ismail <ismaiil_0234@hotmail.com>
+     *
+     */
+    private $SharedStrings = array();
 
-	/**
-	 *
-	 * Mevcut konum uzunluluğunu barındırır.
-	 *
-	 * @author Ismail <ismaiil_0234@hotmail.com>
-	 *
-	 */
-	private $currentSeekPosition = 0;
+    /**
+     *
+     * Aralık uzunluluğunu barındırır.
+     *
+     * @author Ismail <ismaiil_0234@hotmail.com>
+     *
+     */
+    private $seekLength = 1024;
 
-	/**
-	 *
-	 * Excel kolon ad ve indexlerini barındırır.
-	 *
-	 * @author Ismail <ismaiil_0234@hotmail.com>
-	 *
-	 */
-	private $excelColumnIndexes = array();
+    /**
+     *
+     * Mevcut konum uzunluluğunu barındırır.
+     *
+     * @author Ismail <ismaiil_0234@hotmail.com>
+     *
+     */
+    private $currentSeekPosition = 0;
 
-	/**
-	 *
-	 * Sınıf ayarlamalarını yapar.
-	 *
-	 * @author Ismail <ismaiil_0234@hotmail.com>
-	 *
-	 */
-	public function __construct()
-	{
-		$this->setSeekLength(128);
-		$this->genereateColumnIndexes();
-	}
+    /**
+     *
+     * Excel kolon ad ve indexlerini barındırır.
+     *
+     * @author Ismail <ismaiil_0234@hotmail.com>
+     *
+     */
+    private $excelColumnIndexes = array();
 
-	/**
-	 *
-	 * Kolon indekslerini oluşturur.
-	 *
-	 * @author Ismail <ismaiil_0234@hotmail.com>
-	 *
-	 */
-	public function genereateColumnIndexes()
-	{
-		$letter = 'A';
-		$index  = 0;
+    /**
+     *
+     * Stilleri barındırır.
+     *
+     * @author Ismail <ismaiil_0234@hotmail.com>
+     *
+     */
+    private $styleDatas = array();
 
-		while ($letter !== 'ZZ') 
-		{
-		    $this->excelColumnIndexes[$letter++] = $index++;
-		}
-	}
+    /**
+     *
+     * Sınıf ayarlamalarını yapar.
+     *
+     * @author Ismail <ismaiil_0234@hotmail.com>
+     *
+     */
+    public function __construct()
+    {
+        $this->setSeekLength(128);
+        $this->genereateColumnIndexes();
+    }
 
-	/**
-	 *
-	 * Aralık uzunluğunu değiştirir.
-	 *
-	 * @author Ismail <ismaiil_0234@hotmail.com>
-	 *
-	 */
-	public function setSeekLength($length)
-	{
-		$this->seekLength = 1024 * $length;
-	}
+    /**
+     *
+     * Kolon indekslerini oluşturur.
+     *
+     * @author Ismail <ismaiil_0234@hotmail.com>
+     *
+     */
+    public function genereateColumnIndexes()
+    {
+        $letter = 'A';
+        $index  = 0;
 
-	/**
-	 *
-	 * Excel yolunu ayarlar.
-	 *
-	 * @author Ismail <ismaiil_0234@hotmail.com>
-	 *
-	 */
-	public function SetPath($filePath)
-	{
-		$this->FilePath = trim($filePath);
-	}
+        while ($letter !== 'ZZ') 
+        {
+            $this->excelColumnIndexes[$letter++] = $index++;
+        }
+    }
 
-	/**
-	 *
-	 * Tmp yolunu ayarlar.
-	 *
-	 * @author Ismail <ismaiil_0234@hotmail.com>
-	 *
-	 */
-	public function SetTmp($tmpPath)
-	{
-		$this->TmpPath = trim($tmpPath);
+    /**
+     *
+     * Aralık uzunluğunu değiştirir.
+     *
+     * @author Ismail <ismaiil_0234@hotmail.com>
+     *
+     */
+    public function setSeekLength($length)
+    {
+        $this->seekLength = 1024 * $length;
+    }
 
-		if (substr($this->TmpPath, -1) != '/')
-		{
-			$this->TmpPath .= '/';
-		}
-	}
+    /**
+     *
+     * Excel yolunu ayarlar.
+     *
+     * @author Ismail <ismaiil_0234@hotmail.com>
+     *
+     */
+    public function SetPath($filePath)
+    {
+        $this->FilePath = trim($filePath);
+    }
 
-	/**
-	 *
-	 * Tmp yolunu ayarlar.
-	 *
-	 * @author Ismail <ismaiil_0234@hotmail.com>
-	 *
-	 */
-	public function GetRandomTempPath($filePath = null)
-	{
-		if ($filePath)
-		{
-			return sprintf('%s/%s', $this->GetRandomTempPath(null), $filePath);
-		}
+    /**
+     *
+     * Tmp yolunu ayarlar.
+     *
+     * @author Ismail <ismaiil_0234@hotmail.com>
+     *
+     */
+    public function SetTmp($tmpPath)
+    {
+        $this->TmpPath = trim($tmpPath);
 
-		return sprintf('%s%s', $this->TmpPath, $this->TmpPathId);
-	}
+        if (substr($this->TmpPath, -1) != '/')
+        {
+            $this->TmpPath .= '/';
+        }
+    }
 
-	/**
-	 *
-	 * Dosyayı açar ve işlemleri başlatır.
-	 *
-	 * @author Ismail <ismaiil_0234@hotmail.com>
-	 *
-	 */
-	public function Open()
-	{
-		if (empty($this->FilePath) || empty($this->TmpPath) || !file_exists($this->FilePath))
-		{
-			return false;
-		}
+    /**
+     *
+     * Tmp yolunu ayarlar.
+     *
+     * @author Ismail <ismaiil_0234@hotmail.com>
+     *
+     */
+    public function GetRandomTempPath($filePath = null)
+    {
+        if ($filePath)
+        {
+            return sprintf('%s/%s', $this->GetRandomTempPath(null), $filePath);
+        }
 
-		if (!file_exists($this->TmpPath) && !mkdir($this->TmpPath, 0777)) 
-		{
-			return false;
-		}
+        return sprintf('%s%s', $this->TmpPath, $this->TmpPathId);
+    }
 
-		$this->currentSeekPosition = 0;
-		$this->SharedStrings       = array();
-		$this->TmpPathId           = sprintf('%s_%s', uniqid(), rand(1000000, 9000000));
-		$this->Zip                 = new \ZipArchive();
+    /**
+     *
+     * Dosyayı açar ve işlemleri başlatır.
+     *
+     * @author Ismail <ismaiil_0234@hotmail.com>
+     *
+     */
+    public function Open()
+    {
+        if (empty($this->FilePath) || empty($this->TmpPath) || !file_exists($this->FilePath))
+        {
+            return false;
+        }
 
-		if ($this->Zip->open($this->FilePath) === true)
-		{
-			$this->Zip->extractTo($this->GetRandomTempPath(), $this->workbookSharedStringName);
-			$this->Zip->extractTo($this->GetRandomTempPath(), $this->workbookSheet1Name);
+        if (!file_exists($this->TmpPath) && !mkdir($this->TmpPath, 0777)) 
+        {
+            return false;
+        }
 
-			$this->loadSharedStrings();
-			return true;
-		}
+        $this->currentSeekPosition = 0;
+        $this->SharedStrings       = array();
+        $this->TmpPathId           = sprintf('%s_%s', uniqid(), rand(1000000, 9000000));
+        $this->Zip                 = new \ZipArchive();
 
-		return false;
-	}
+        if ($this->Zip->open($this->FilePath) === true)
+        {
+            $this->Zip->extractTo($this->GetRandomTempPath(), $this->workbookSharedStringName);
+            $this->Zip->extractTo($this->GetRandomTempPath(), $this->workbookSheet1Name);
+            $this->Zip->extractTo($this->GetRandomTempPath(), $this->workbookStyle);
 
-	/**
-	 *
-	 * Satırları döner.
-	 *
-	 * @author Ismail <ismaiil_0234@hotmail.com>
-	 *
-	 */
-	public function GetRows()
-	{
-		$stream = fopen($this->GetRandomTempPath($this->workbookSheet1Name), 'r');
-		$parser = xml_parser_create();
+            $this->loadSharedStrings();
+            $this->loadStyles();
+            return true;
+        }
 
-		while (($data = fread($stream, $this->seekLength))) 
-		{
-			xml_parse($parser, $data);
+        return false;
+    }
 
-			foreach ($this->getRowDetails($data) as $row)
-			{
-				yield $row;
-			}
+    /**
+     *
+     * Satırları döner.
+     *
+     * @author Ismail <ismaiil_0234@hotmail.com>
+     *
+     */
+    public function GetRows()
+    {
+        $stream = fopen($this->GetRandomTempPath($this->workbookSheet1Name), 'r');
+        $parser = xml_parser_create();
 
-			if (strlen($data) < $this->seekLength)
-			{
-				break;
-			}
+        while (($data = fread($stream, $this->seekLength))) 
+        {
+            xml_parse($parser, $data);
 
-			$this->currentSeekPosition += $this->getSeekPosition($data) + 6;
+            foreach ($this->getRowDetails($data) as $row)
+            {
+                yield $row;
+            }
 
-			fseek($stream, $this->currentSeekPosition);
-		}
+            if (strlen($data) < $this->seekLength)
+            {
+                break;
+            }
 
-		xml_parser_free($parser);
+            $this->currentSeekPosition += $this->getSeekPosition($data) + 6;
 
-		fclose($stream);
+            fseek($stream, $this->currentSeekPosition);
+        }
 
-	}
+        xml_parser_free($parser);
 
-	/**
-	 *
-	 * Kütüphane yok edilirken tetiklenir.
-	 *
-	 * @author Ismail <ismaiil_0234@hotmail.com>
-	 *
-	 */
-	public function __destruct()
-	{
-		if ($this->Zip) 
-		{
-			$this->Zip->close();
-		}
+        fclose($stream);
 
-		if (!empty($this->TmpPathId) && file_exists($this->GetRandomTempPath())) 
-		{
-			$this->removeDirectory($this->GetRandomTempPath());
-		}
-	}
+    }
 
-	/**
-	 *
-	 * Satır detaylarını döner.
-	 *
-	 * @author Ismail <ismaiil_0234@hotmail.com>
-	 *
-	 */
-	private function getRowDetails($data)
-	{
-		$rows = [];
+    /**
+     *
+     * Kütüphane yok edilirken tetiklenir.
+     *
+     * @author Ismail <ismaiil_0234@hotmail.com>
+     *
+     */
+    public function __destruct()
+    {
+        if ($this->Zip) 
+        {
+            $this->Zip->close();
+        }
 
-		if (preg_match_all('@<row r="(.*?)"(.*?)>(.*?)</row>@', $data, $rowMatch))
-		{
-			foreach ($rowMatch[3] as $rowIndex => $row)
-			{
-				$rows[] = array(
-					'RowId' => $rowMatch[1][$rowIndex],
-					'Cells' => $this->getCellDetails($rowMatch[1][$rowIndex], $rowMatch[3][$rowIndex]),
-				);
-			}
-		}
+        if (!empty($this->TmpPathId) && file_exists($this->GetRandomTempPath())) 
+        {
+            $this->removeDirectory($this->GetRandomTempPath());
+        }
+    }
 
-		return $rows;
-	}
+    /**
+     *
+     * Satır detaylarını döner.
+     *
+     * @author Ismail <ismaiil_0234@hotmail.com>
+     *
+     */
+    private function getRowDetails($data)
+    {
+        $rows = [];
 
-	/**
-	 *
-	 * Sütun detaylarını döner.
-	 *
-	 * @author Ismail <ismaiil_0234@hotmail.com>
-	 *
-	 */
-	private function getCellDetails($rowId, $cellData)
-	{
-		$cells = [];
+        if (preg_match_all('@<row r="(.*?)"(.*?)>(.*?)</row>@', $data, $rowMatch))
+        {
+            foreach ($rowMatch[3] as $rowIndex => $row)
+            {
+                $rows[] = array(
+                    'RowId' => $rowMatch[1][$rowIndex],
+                    'Cells' => $this->getCellDetails($rowMatch[1][$rowIndex], $rowMatch[3][$rowIndex]),
+                );
+            }
+        }
 
-		if (preg_match_all('@<c r="([A-Z\/]+)(.*?)"(.*?)><v>(.*?)</v></c>@', $cellData, $cellMatch))
-		{
-			foreach ($cellMatch[4] as $cellIndex => $cell)
-			{
-				$cells[$this->excelColumnIndexes[$cellMatch[1][$cellIndex]]] = $this->getCellValue($cell, $cellMatch[3][$cellIndex]);
-			}
-		}
+        return $rows;
+    }
 
-		return $cells;
-	}
+    /**
+     *
+     * Sütun detaylarını döner.
+     *
+     * @author Ismail <ismaiil_0234@hotmail.com>
+     *
+     */
+    private function getCellDetails($rowId, $cellData)
+    {
+        $cells = [];
 
-	/**
-	 *
-	 * Hücre değerini döner.
-	 *
-	 * @author Ismail <ismaiil_0234@hotmail.com>
-	 *
-	 */
-	private function getCellValue($value, $cellProperty)
-	{
-		if (strpos($cellProperty, "t=\"s\"") !== false)
-		{
-			return $this->SharedStrings[$value];
-		}
+        if (preg_match_all('@<c\s+r="([A-Z\/]+)([0-9\/]+)"([^>]*)>\s*<v>(.*?)</v>@', $cellData, $cellMatch))
+        {
+            foreach ($cellMatch[4] as $cellIndex => $cell)
+            {
+                $cells[$this->excelColumnIndexes[$cellMatch[1][$cellIndex]]] = $this->getCellValue($cellData, $cell, $cellMatch[3][$cellIndex]);
+            }
+        }
 
-		return $value;
+        return $cells;
+    }
 
-	}
+    /**
+     *
+     * Hücre değerini döner.
+     *
+     * @author Ismail <ismaiil_0234@hotmail.com>
+     *
+     */
+    private function getCellValue($cellData, $value, $cellProperty)
+    {
+        if (strpos($cellProperty, "t=\"s\"") !== false)
+        {
+            return $this->SharedStrings[$value];
+        }
 
-	/**
-	 *
-	 * Aralık konumunu döner.
-	 *
-	 * @author Ismail <ismaiil_0234@hotmail.com>
-	 *
-	 */
-	private function getSeekPosition($data)
-	{
-		$seek = 0;
+        if (preg_match('@s="(.*?)"@', $cellProperty, $cellMatch)) 
+        {
+            if (isset($this->styleDatas[$cellMatch[1]])) 
+            {
+                switch ($this->styleDatas[$cellMatch[1]]) 
+                {
+                    case 'DATE': return date('d.m.Y', strtotime(sprintf('1 January 1900 + %d days', $value - 2)));
+                }
+            }
 
-		do 
-		{
-			$seek += 300;
+        }
 
-			if ($this->seekLength - $seek <= 0) 
-			{
-				return $this->seekLength;
-			}
+        return $value;
 
-			$position = strpos($data, '</row>', $this->seekLength - $seek);
-		} 
-		while ($position === false);
+    }
 
-		return $position;
-	}
+    /**
+     *
+     * Aralık konumunu döner.
+     *
+     * @author Ismail <ismaiil_0234@hotmail.com>
+     *
+     */
+    private function getSeekPosition($data)
+    {
+        $seek = 0;
 
-	/**
-	 *
-	 * Paylaşılan metinleri önbelleğe alır.
-	 *
-	 * @author Ismail <ismaiil_0234@hotmail.com>
-	 *
-	 */
-	private function loadSharedStrings()
-	{
-		$xml = new \XMLReader();
-		$xml->open($this->GetRandomTempPath($this->workbookSharedStringName));
+        do 
+        {
+            $seek += 300;
 
-		$currentIndex = -1;
+            if ($this->seekLength - $seek <= 0) 
+            {
+                return $this->seekLength;
+            }
 
-		while ($xml->read()) 
-		{
-			if ($xml->nodeType === \XMLReader::ELEMENT) 
-			{
-				switch ($xml->name) 
-				{
-					case 'si':
-						$currentIndex++;
-						break;
-					case 't':
-						$this->SharedStrings[$currentIndex] = $xml->readString();
-						break;
-				}
-			}
-		}
+            $position = strpos($data, '</row>', $this->seekLength - $seek);
+        } 
+        while ($position === false);
 
-		$xml->close();
-	}
+        return $position;
+    }
 
-	/**
-	 *
-	 * Klasör ve bağlı alt klasörleri/dosyaları siler.
-	 *
-	 * @author Ismail Satilmis <ismaiil_0234@hotmail.com>
-	 *
-	 */
-	private function removeDirectory($directory) 
-	{ 
-		if (is_dir($directory)) 
-		{ 
-			$files = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($directory, \RecursiveDirectoryIterator::SKIP_DOTS), \RecursiveIteratorIterator::CHILD_FIRST);
+    /**
+     *
+     * Paylaşılan metinleri önbelleğe alır.
+     *
+     * @author Ismail <ismaiil_0234@hotmail.com>
+     *
+     */
+    private function loadSharedStrings()
+    {
+        $xml = new \XMLReader();
+        $xml->open($this->GetRandomTempPath($this->workbookSharedStringName));
 
-			foreach ($files as $finfo) 
-			{
-				if ($finfo->isDir())
-				{
-					rmdir($finfo->getRealPath());
-				}
-				else
-				{
-					unlink($finfo->getRealPath());
-				}
-			}
+        $currentIndex = -1;
 
-			rmdir($directory);
-		} 
-	}
+        while ($xml->read()) 
+        {
+            if ($xml->nodeType === \XMLReader::ELEMENT) 
+            {
+                switch ($xml->name) 
+                {
+                    case 'si':
+                        $currentIndex++;
+                        break;
+                    case 't':
+                        $this->SharedStrings[$currentIndex] = $xml->readString();
+                        break;
+                }
+            }
+        }
+
+        $xml->close();
+    }
+
+    /**
+     *
+     * Stilleri yükler.
+     *
+     * @author Ismail <ismaiil_0234@hotmail.com>
+     *
+     */
+    private function loadStyles()
+    {
+        $xml = new \XMLReader();
+        $xml->open($this->GetRandomTempPath($this->workbookStyle));
+
+        $currentIndex = -1;
+
+        while ($xml->read()) 
+        {
+            if ($xml->nodeType === \XMLReader::ELEMENT) 
+            {
+                switch ($xml->name) 
+                {
+                    case 'cellXfs':
+                        $currentIndex = 0;
+                        break;
+
+                    case 'xf':
+
+                        if ($currentIndex != -1) 
+                        {
+                            $this->styleDatas[$currentIndex++] = $this->getStyleValue($xml->getAttribute('numFmtId'));
+                        }
+
+                        break;
+                }
+            }
+        }
+
+        $xml->close();
+    }
+
+    /**
+     *
+     * Stil değerini döner.
+     *
+     * @author Ismail <ismaiil_0234@hotmail.com>
+     *
+     */
+    private function getStyleValue($value)
+    {
+        switch ($value) 
+        {
+            case '14': return 'DATE';
+        }
+
+        return 'UNKNOWN';
+    }
+
+    /**
+     *
+     * Klasör ve bağlı alt klasörleri/dosyaları siler.
+     *
+     * @author Ismail Satilmis <ismaiil_0234@hotmail.com>
+     *
+     */
+    private function removeDirectory($directory) 
+    { 
+        if (is_dir($directory)) 
+        { 
+            $files = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($directory, \RecursiveDirectoryIterator::SKIP_DOTS), \RecursiveIteratorIterator::CHILD_FIRST);
+
+            foreach ($files as $finfo) 
+            {
+                if ($finfo->isDir())
+                {
+                    rmdir($finfo->getRealPath());
+                }
+                else
+                {
+                    unlink($finfo->getRealPath());
+                }
+            }
+
+            rmdir($directory);
+        } 
+    }
 }

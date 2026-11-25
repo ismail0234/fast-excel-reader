@@ -493,7 +493,7 @@ class FastExcelReader
      *
      * Klasör ve bağlı alt klasörleri/dosyaları siler.
      *
-     * @author Ismail Satilmis <ismaiil_0234@hotmail.com>
+     * @author Ismail <ismaiil_0234@hotmail.com>
      *
      */
     private function removeDirectory($directory) 
